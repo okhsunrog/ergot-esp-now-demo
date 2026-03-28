@@ -1,0 +1,57 @@
+[package]
+edition      = "2024"
+name         = "esp-now-device"
+rust-version = "1.88"
+version      = "0.1.0"
+
+[[bin]]
+name = "esp-now-device"
+path = "./src/bin/main.rs"
+
+[dependencies]
+esp-hal = { git = "https://github.com/esp-rs/esp-hal", branch = "main", features = ["defmt", "esp32s3", "unstable"] }
+esp-rtos = { git = "https://github.com/esp-rs/esp-hal", branch = "main", features = [
+  "defmt",
+  "embassy",
+  "esp-alloc",
+  "esp-radio",
+  "esp32s3",
+] }
+esp-bootloader-esp-idf = { git = "https://github.com/esp-rs/esp-hal", branch = "main", features = ["defmt", "esp32s3"] }
+esp-alloc              = { git = "https://github.com/esp-rs/esp-hal", branch = "main", features = ["defmt"] }
+esp-radio = { git = "https://github.com/esp-rs/esp-hal", branch = "main", features = [
+  "defmt",
+  "esp-alloc",
+  "esp32s3",
+  "unstable",
+  "esp-now",
+] }
+defmt                  = "1.0.1"
+panic-rtt-target       = { version = "0.2.0", features = ["defmt"] }
+rtt-target             = { version = "0.6.2", features = ["defmt"] }
+embassy-executor       = { version = "0.9.1", features = ["defmt"] }
+embassy-time           = { version = "0.5.0", features = ["defmt"] }
+embassy-futures        = "0.1.2"
+critical-section = "1.2.0"
+static_cell      = "2.1.1"
+bbqueue          = "0.7"
+mutex            = "1.0.2"
+ergot = { git = "https://github.com/jamesmunns/ergot", default-features = false, features = [
+  "nostd-seed-router",
+  "embassy-time",
+  "disable-cache-padding",
+  "defmt-v1",
+  "defmt-v1-internal",
+] }
+
+[profile.dev]
+opt-level = "s"
+
+[profile.dev.package.esp-radio]
+opt-level = 3
+
+[profile.release]
+codegen-units = 1
+debug         = 2
+lto           = 'fat'
+opt-level     = 's'
