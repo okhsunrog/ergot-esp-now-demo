@@ -39,8 +39,8 @@ async fn main() -> Result<()> {
         framed_stream::Sink::new_from_handle(queue.clone(), MTU),
     ));
 
-    // Register USB interface — starts Active with link-local net_id=0,
-    // real net_id discovered from bridge's first frame
+    // Register USB interface with link-local addressing (net_id=0).
+    // The router rewrites net_id=0 to the real net_id on both src and dst.
     register_edge_interface(
         &stack,
         device,
