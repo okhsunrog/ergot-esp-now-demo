@@ -16,10 +16,9 @@ use bbqueue::traits::coordination::cas::AtomicCoord;
 use bbqueue::traits::notifier::maitake::MaiNotSpsc;
 use bbqueue::traits::storage::Inline;
 
-use ergot::interface_manager::profiles::router::{Router, RouterFrameProcessor};
+use ergot::prelude::*;
 use ergot::interface_manager::utils::framed_stream;
 use ergot::interface_manager::FrameProcessor;
-use ergot::NetStack;
 use mutex::raw_impls::cs::CriticalSectionRawMutex;
 
 use defmt::{debug, info, warn};

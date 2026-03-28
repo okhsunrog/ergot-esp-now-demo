@@ -2,9 +2,8 @@ use std::collections::HashSet;
 use std::time::Duration;
 
 use anyhow::{Result, anyhow};
-use ergot::interface_manager::profiles::direct_edge::{DirectEdge, EDGE_NODE_ID, EdgeFrameProcessor};
+use ergot::prelude::*;
 use ergot::interface_manager::utils::framed_stream;
-use ergot::interface_manager::InterfaceState;
 use ergot::toolkits::nusb_v0_1::{EdgeStack, find_new_devices, register_edge_interface};
 use ergot::well_known::ErgotPingEndpoint;
 use std::sync::Arc;

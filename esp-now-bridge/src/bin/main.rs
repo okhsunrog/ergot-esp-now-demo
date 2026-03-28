@@ -18,12 +18,12 @@ use bbqueue::traits::coordination::cas::AtomicCoord;
 use bbqueue::traits::notifier::maitake::MaiNotSpsc;
 use bbqueue::traits::storage::Inline;
 
-use ergot::interface_manager::profiles::router::{Router, RouterFrameProcessor, UPSTREAM_IDENT};
+use ergot::prelude::*;
+use ergot::interface_manager::profiles::router::UPSTREAM_IDENT;
 use ergot::interface_manager::utils::framed_stream;
-use ergot::interface_manager::{FrameProcessor, InterfaceState, Profile};
+use ergot::interface_manager::FrameProcessor;
 use ergot::net_stack::services::{SeedLease, bridge_seed_assign, bridge_seed_refresh};
 use ergot::toolkits::embassy_usb_v0_6 as usb_kit;
-use ergot::NetStack;
 use mutex::raw_impls::cs::CriticalSectionRawMutex;
 
 use log::{debug, error, info, warn};
