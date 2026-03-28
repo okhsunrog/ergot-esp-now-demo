@@ -70,8 +70,8 @@ async fn main() -> Result<()> {
         );
     }
 
-    // Also try direct ping to bridge using discovered address as-is
-    log::info!("Pinging bridge directly...");
+    // Ping all discovered devices
+    log::info!("Pinging all discovered devices...");
     for dev in &devices {
         let ping_addr = dev.addr;
         log::info!("Pinging {:?}...", ping_addr);
