@@ -37,7 +37,7 @@ static_cell      = "2.1.1"
 bbqueue          = "0.7"
 mutex            = "1.0.2"
 serde            = { version = "1", default-features = false, features = ["derive"] }
-ergot = { git = "https://github.com/jamesmunns/ergot", default-features = false, features = [
+ergot = { git = "https://github.com/okhsunrog/ergot", branch = "bus-address-claim", default-features = false, features = [
   "nostd-seed-router",
   "embassy-usb-v0_6",
   "embassy-time",

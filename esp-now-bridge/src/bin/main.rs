@@ -164,21 +164,21 @@ async fn main(spawner: Spawner) -> ! {
 
     info!("Bridge: usb ident={} (pending seed assignment)", usb_ident);
 
-    // Manually activate upstream with root's net_id=1 so bridge can send seed request.
-    // In a COBS stream setup the root would initiate contact, but with ESP-NOW broadcast
-    // there's no auto-bootstrap — we must activate manually.
+    // Activate upstream with link-local addressing (net_id=0).
+    // The real net_id will be discovered from the root router's response
+    // to the seed assign request.
     stack.manage_profile(|router| {
         router
             .set_interface_state(
                 UPSTREAM_IDENT,
                 InterfaceState::Active {
-                    net_id: 1,
+                    net_id: 0,
                     node_id: ergot::interface_manager::profiles::direct_edge::EDGE_NODE_ID,
                 },
             )
             .expect("failed to activate upstream")
     });
-    info!("Bridge: upstream activated with net_id=1");
+    info!("Bridge: upstream activated with link-local addressing");
 
     // ========== Spawn all transport tasks ==========
     spawner.must_spawn(usb_task(usb_device));
@@ -265,19 +265,10 @@ async fn usb_tx_task(
 
 #[embassy_executor::task]
 async fn esp_now_rx_task(mut receiver: EspNowReceiver<'static>, stack: &'static Stack) {
-    let upstream_net_id = stack
-        .manage_profile(|router| {
-            router
-                .interface_state(UPSTREAM_IDENT)
-                .and_then(|s| match s {
-                    InterfaceState::Active { net_id, .. } => Some(net_id),
-                    _ => None,
-                })
-        })
-        .unwrap_or(1);
-
-    let mut processor = RouterFrameProcessor::new(upstream_net_id);
-    info!("[esp-now rx] running, net_id={}", upstream_net_id);
+    // Use EdgeFrameProcessor for upstream: it discovers the real net_id from
+    // the first incoming frame's destination address (link-local → real net_id).
+    let mut processor = EdgeFrameProcessor::new();
+    info!("[esp-now rx] running (link-local, awaiting net_id discovery)");
 
     loop {
         let data = receiver.receive_async().await;
